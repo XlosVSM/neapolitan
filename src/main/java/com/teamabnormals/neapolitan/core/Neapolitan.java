@@ -1,6 +1,8 @@
 package com.teamabnormals.neapolitan.core;
 
 import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
+import com.teamabnormals.gallery.core.data.client.GalleryAssetsRemolderProvider;
+import com.teamabnormals.gallery.core.data.client.GalleryItemModelProvider;
 import com.teamabnormals.neapolitan.client.model.BananaPeelModel;
 import com.teamabnormals.neapolitan.client.model.ChimpanzeeHeadModel;
 import com.teamabnormals.neapolitan.client.model.ChimpanzeeModel;
@@ -13,6 +15,7 @@ import com.teamabnormals.neapolitan.core.data.client.NeapolitanItemModelProvider
 import com.teamabnormals.neapolitan.core.data.client.NeapolitanSpriteSourceProvider;
 import com.teamabnormals.neapolitan.core.data.server.NeapolitanDatapackBuiltinEntriesProvider;
 import com.teamabnormals.neapolitan.core.data.server.NeapolitanLootTableProvider;
+import com.teamabnormals.neapolitan.core.data.server.NeapolitanRecipeProvider;
 import com.teamabnormals.neapolitan.core.data.server.modifiers.NeapolitanAdvancementModifierProvider;
 import com.teamabnormals.neapolitan.core.data.server.modifiers.NeapolitanLootModifierProvider;
 import com.teamabnormals.neapolitan.core.data.server.tags.*;
@@ -61,6 +64,7 @@ public class Neapolitan {
 		REGISTRY_HELPER.register(bus);
 		NeapolitanMobEffects.MOB_EFFECTS.register(bus);
 		NeapolitanFeatures.FEATURES.register(bus);
+		NeapolitanPoiTypes.POI_TYPES.register(bus);
 		NeapolitanPaintingVariants.PAINTING_VARIANTS.register(bus);
 		NeapolitanBannerPatterns.BANNER_PATTERNS.register(bus);
 		NeapolitanParticleTypes.PARTICLE_TYPES.register(bus);
@@ -116,12 +120,16 @@ public class Neapolitan {
 		generator.addProvider(server, new NeapolitanLootTableProvider(output));
 		generator.addProvider(server, new NeapolitanLootModifierProvider(output, provider));
 		generator.addProvider(server, new NeapolitanAdvancementModifierProvider(output, provider));
+		generator.addProvider(server, new NeapolitanRecipeProvider(output));
 
 		boolean client = event.includeClient();
 		generator.addProvider(client, new NeapolitanBlockStateProvider(output, helper));
 		generator.addProvider(client, new NeapolitanItemModelProvider(output, helper));
 		generator.addProvider(client, new NeapolitanSpriteSourceProvider(output, helper));
 //		generator.addProvider(includeClient, new NeapolitanLanguageProvider(output));
+
+		generator.addProvider(client, new GalleryItemModelProvider(MOD_ID, output, helper));
+		generator.addProvider(client, new GalleryAssetsRemolderProvider(MOD_ID, output, provider));
 	}
 
 	@OnlyIn(Dist.CLIENT)
